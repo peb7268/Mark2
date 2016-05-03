@@ -2,22 +2,14 @@
 var gulp            = require('gulp');
 var gutil           = require('gulp-util');
 
-var jshint          = require('gulp-jshint');
-var uglify          = require('gulp-uglify');
-
-var jade            = require('gulp-jade');
 var sass            = require('gulp-sass');
 var autoprefixer    = require('gulp-autoprefixer');
 var browserSync     = require('browser-sync');
 var notify          = require('gulp-notify');
 
 var paths           = {
-    'jade'            : './public/templates/**/*.jade',
-    'views'           : './public',
     'sass'            : './public/styles/sass/**/*.scss',
-    'css'             : './public/styles/css/',
-    'js'              : './public/js/**/*.js',
-    'frontEntryPoint' : 'public/js/app.js'
+    'css'             : './public/styles/css/'
 }
 
 browserSync.init({
@@ -25,39 +17,6 @@ browserSync.init({
         baseDir: './public/'
     }
 });
-
-gulp.task('views', function() {
-  var YOUR_LOCALS = {};
- 
-  gulp.src(paths.jade)
-    .pipe(jade({
-      locals: YOUR_LOCALS
-    }))
-    .pipe(gulp.dest(paths.views))
-});
-
-gulp.task('lint', function() {
-  return gulp.src(paths.js)
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'));
-});
-
-gulp.task('scripts', function(){
-    browserify(paths.frontEntryPoint)
-    .bundle()
-    .on('error', function(e){
-        gutil.log(e);
-        notify(e);
-    })
-    .pipe(source('app.bundle.js'))
-    .pipe(buffer())
-    .pipe(uglify())
-    .pipe(gulp.dest('public/dist/'))
-    .pipe(browserSync.stream())
-    .pipe(notify("scripts build finished: <%= file.relative %>"));
-});
-gulp.task('js', ['lint', 'scripts']);
-
 
 gulp.task('sass', function() {
     return gulp.src(paths.sass)
@@ -69,10 +28,8 @@ gulp.task('sass', function() {
 });
 
 gulp.task('serve', function(){
-    gulp.watch(paths.jade, ['views']);
     gulp.watch(paths.sass, ['sass']);
-    gulp.watch(paths.js,   ['lint', 'scripts']);
     gulp.watch(['./public/*.html']).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['js', 'sass', 'views', 'serve']);
+gulp.task('default', ['sass', 'serve']);
