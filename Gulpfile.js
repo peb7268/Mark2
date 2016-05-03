@@ -3,10 +3,7 @@ var gulp            = require('gulp');
 var gutil           = require('gulp-util');
 
 var jshint          = require('gulp-jshint');
-var browserify      = require('browserify');
-var source          = require('vinyl-source-stream');
 var uglify          = require('gulp-uglify');
-var buffer          = require('vinyl-buffer');
 
 var jade            = require('gulp-jade');
 var sass            = require('gulp-sass');
